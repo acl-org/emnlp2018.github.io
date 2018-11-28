@@ -35,7 +35,7 @@ excerpt: "October 31&ndash;November 4<br/>Brussels, Belgium"
 
 <h2>Welcome!</h2>
 
-SIGDAT, the Association for Computational Linguistics (ACL) special interest group on linguistic data and corpus-based approaches to NLP, invites you to participate in the 2018 Conference on Empirical Methods in Natural Language Processing (EMNLP) in Brussels, Belgium. EMNLP 2018 will be held at the [Square Meeting Center](http://square-brussels.com) in Brussels from October 31st through November 4th, 2018.
+[SIGDAT](http://sigdat.org), the Association for Computational Linguistics (ACL) special interest group on linguistic data and corpus-based approaches to NLP, invites you to participate in the 2018 Conference on Empirical Methods in Natural Language Processing (EMNLP) in Brussels, Belgium. EMNLP 2018 will be held at the [Square Meeting Center](http://square-brussels.com) in Brussels from October 31st through November 4th, 2018.
 
 <h2 id="dates">Important Dates</h2>
 
