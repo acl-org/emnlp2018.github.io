@@ -17,17 +17,17 @@ excerpt: "October 31&ndash;November 4<br/>Brussels, Belgium"
 
 <h2>News</h2>
 
+**November 30, 2018**. The slides for all three keynotes are now available on the website on the [keynotes](/program/keynotes) page and are also linked to from the [schedule](/schedule).
+{: .notice--info}
+
 **November 2, 2018**. A PDF version of the conference handbook is also available [online](https://drive.google.com/file/d/1Ya0F3QaMqfACS7sHc9_bcnSfSjhWpumX/view). 
 {: .notice--info}
 
 **October 30, 2018**. Due to limited room space at the venue, attendees will need to spread themselves across FOUR rooms for all conference plenary sessions: **Gold Hall**, **Copper Hall**, **Silver Hall**, and **Hall 100**.
 {: .notice--info}
 
-**October 30, 2018**. One of the baggage handling companies at Brussels airport is on strike today. As far as we know, only airlines mentioned on [this page](https://www.brusselsairport.be/en/passengers/work-stoppage-at-baggage-handler-aviapartner) are affected but please check with your airport and airline to confirm.
-{: .notice--info}
-
 **October 27, 2018**. The conference app is now live! If you already have the Guidebook app on your device, click on "Find Guides" and search for "EMNLP 2018" or scan the [QR code](/participants/#conference-app). Otherwise, click <a href="https://guidebook.com/g/emnlp2018/" target="_blank">here</a>.
-{: .notice--info}
+{: .notice}
 
 **October 26, 2018**. The papers/posters/demos in the [conference schedule](/schedule) are now linked to the corresponding PDFs in the ACL anthology.
 {: .notice}
