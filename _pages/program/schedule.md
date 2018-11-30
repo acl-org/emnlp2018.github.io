@@ -900,6 +900,17 @@ script: |
                 }
             });
 
+            /* open the Google Drive URL in a new window/tab when we click on the PDF icon for the keynote slides */            
+            $('body').on('click', 'div.session-abstract p i.slides-icon', function(event) {
+                event.stopPropagation();
+                event.preventDefault();
+                var urlToOpen = $(this).attr('data');
+                if (urlToOpen !== '') {
+                    window.open(urlToOpen, "_blank");
+                }
+            });
+
+
             /* open the anthology URL in a new window/tab when we click on the PDF icon for a paper or a poster */            
             $('body').on('click', 'table.paper-table tr#paper i.paper-icon,table.paper-table tr#best-paper i.paper-icon,table.poster-table tr#poster i.paper-icon', function(event) {
                 event.stopPropagation();
@@ -1188,7 +1199,7 @@ script: |
     <div class="session session-expandable session-plenary">
         <div id="expander"></div>
         <a href="#" class="session-title">
-            <strong>Keynote I: "Truth or Lie? Spoken Indicators of Deception in Speech"</strong>
+            <strong>Keynote I: "Truth or Lie? Spoken Indicators of Deception in Speech"</strong> 
         </a>
         <br/>
         <span class="session-people">
@@ -1201,7 +1212,7 @@ script: |
         <div class="paper-session-details">
             <br/>
             <div class="session-abstract">
-                <p>Detecting deception from various forms of human behavior is a longstanding research goal which is of considerable interest to the military, law enforcement, corporate security, social services and mental health workers. However, both humans and polygraphs are very poor at this task. We describe more accurate methods we have developed to detect deception automatically from spoken language. Our classifiers are trained on the largest cleanly recorded corpus of within-subject deceptive and non-deceptive speech that has been collected. To distinguish truth from lie we make use of acoustic-prosodic, lexical, demographic, and personality features. We further examine differences in deceptive behavior based upon gender, personality, and native language (Mandarin Chinese vs. English), comparing our systems to human performance. We extend our studies to identify cues in trusted speech vs. mistrusted speech and how these features differ by speaker and by listener. Why does a listener believe a lie?</p>
+                <p>Detecting deception from various forms of human behavior is a longstanding research goal which is of considerable interest to the military, law enforcement, corporate security, social services and mental health workers. However, both humans and polygraphs are very poor at this task. We describe more accurate methods we have developed to detect deception automatically from spoken language. Our classifiers are trained on the largest cleanly recorded corpus of within-subject deceptive and non-deceptive speech that has been collected. To distinguish truth from lie we make use of acoustic-prosodic, lexical, demographic, and personality features. We further examine differences in deceptive behavior based upon gender, personality, and native language (Mandarin Chinese vs. English), comparing our systems to human performance. We extend our studies to identify cues in trusted speech vs. mistrusted speech and how these features differ by speaker and by listener. Why does a listener believe a lie?&nbsp;<i class="fa fa-file-pdf-o slides-icon" data="https://drive.google.com/file/d/17Ke40bHHnUyNrdA4twcyKI17D_B22Oim/view?usp=sharing" aria-hidden="true"></i></p>
             </div>
         </div>
     </div>
@@ -4777,7 +4788,7 @@ script: |
         <div class="paper-session-details">
             <br/>
             <div class="session-abstract">
-                <p>Since the dawn of human civilization, finance and language technology have been connected. However, only recently have advances in statistical language understanding, and an ever-increasing thirst for market advantage, led to the widespread application of natural language technology across the global capital markets. This talk will review the ways in which language technology is enabling market participants to quickly understand and respond to major world events and breaking business news. It will outline the state of the art in applications of NLP to finance and highlight open problems that are being addressed by emerging research.</p>
+                <p>Since the dawn of human civilization, finance and language technology have been connected. However, only recently have advances in statistical language understanding, and an ever-increasing thirst for market advantage, led to the widespread application of natural language technology across the global capital markets. This talk will review the ways in which language technology is enabling market participants to quickly understand and respond to major world events and breaking business news. It will outline the state of the art in applications of NLP to finance and highlight open problems that are being addressed by emerging research.&nbsp;<i class="fa fa-file-pdf-o slides-icon" data="https://drive.google.com/file/d/183r_3X3yzDhEWM43e2pOoS_w3kUxJbaR/view?usp=sharing" aria-hidden="true"></i></p>
             </div>
         </div>
     </div>
@@ -6948,7 +6959,7 @@ script: |
         <div class="paper-session-details">
             <br/>
             <div class="session-abstract">
-                <p>There are many recent advances in semantic parsing: we see a rising number of semantically annotated corpora and there is exciting technology (such as neural networks) to be explored. In this talk I will discuss what role computational semantics could play in future natural language processing applications (including fact checking and machine translation). I will argue that we should not just look at semantic parsing, but that things can get really interesting when we can use language-neutral meaning representations to draw (transparent) inferences. The main ideas will be exemplified by the parallel meaning bank, a new corpus comprising texts annotated with formal meaning representations for English, Dutch, German and Italian.</p>
+                <p>There are many recent advances in semantic parsing: we see a rising number of semantically annotated corpora and there is exciting technology (such as neural networks) to be explored. In this talk I will discuss what role computational semantics could play in future natural language processing applications (including fact checking and machine translation). I will argue that we should not just look at semantic parsing, but that things can get really interesting when we can use language-neutral meaning representations to draw (transparent) inferences. The main ideas will be exemplified by the parallel meaning bank, a new corpus comprising texts annotated with formal meaning representations for English, Dutch, German and Italian.&nbsp;<i class="fa fa-file-pdf-o slides-icon" data="https://drive.google.com/file/d/1xr8bnf1VnUZP9Ew1h8fjKCEs5InHhNps/view?usp=sharing" aria-hidden="true"></i></p>
             </div>
         </div>
     </div>

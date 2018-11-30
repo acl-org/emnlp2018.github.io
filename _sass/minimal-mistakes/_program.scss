@@ -441,6 +441,14 @@ div.session {
         }
     }
 
+    div.session-abstract {
+        p {
+            i.slides-icon {
+                cursor: pointer;
+            }        
+        }
+    }
+
     td#paper-time {
         font-size: $type-size-5;
     }
