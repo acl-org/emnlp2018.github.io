@@ -6,9 +6,9 @@ and generates the various files needed to build the schedule in the conference a
 
 - order.txt
 - authors.csv
-- session-chairs.csv
 - abstracts.csv
-- anthology-mapping.csv
+- session-chairs.csv [optional]
+- anthology-mapping.csv [optional]
 
 Note that `dos2unix` must be run on the order file before processing.
 
@@ -31,13 +31,14 @@ from parse_order_file_and_generate_schedule import (NON_PAPER_SESSION_REGEXP,
                                                     KEYNOTE_ABSTRACT_DICT,
                                                     process_line,
                                                     collect_instances,
-                                                    get_anthology_link)
+                                                    get_anthology_link,
+                                                    get_session_chair_link)
 
 
 def main():
 
     # set up an argument parser
-    parser = argparse.ArgumentParser(prog='parse_order_file_and_generate_schedule.py')
+    parser = argparse.ArgumentParser(prog='parse_order_file_for_app.py')
     parser.add_argument("--order",
                         dest="order_file",
                         required=True,
@@ -48,16 +49,18 @@ def main():
                         help="Path to CSV file containing author information")
     parser.add_argument("--chairs",
                         dest="chairs_csv",
-                        required=True,
-                        help="Path to CSV file containing session chair information")
+                        required=False,
+                        default=None,
+                        help="Path to optional CSV file containing session chair information")
     parser.add_argument("--abstracts",
                         dest="abstracts_csv",
                         required=True,
                         help="Path to CSV file containing the abstracts")
     parser.add_argument("--anthology",
                         dest="anthology_csv",
-                        required=True,
-                        help="Path to CSV file containing anthology IDs for papers, posters, and demos")
+                        required=False,
+                        default=None,
+                        help="Path to optional CSV file containing anthology IDs for papers, posters, and demos")
 
     # parse given command line arguments
     args = parser.parse_args()
@@ -80,12 +83,13 @@ def main():
 
     # read in the CSV file mapping sessions to chairs
     chairs_dict = {}
-    with open(args.chairs_csv, 'r') as chairsfh:
-        reader = csv.DictReader(chairsfh, fieldnames=["Session", "Name", "Email"])
-        for row in reader:
-            session_id = row['Session'].split(':')[0]
-            assert session_id not in chairs_dict
-            chairs_dict[session_id] = (row['Name'], row['Email'])
+    if args.chairs_csv:
+        with open(args.chairs_csv, 'r') as chairsfh:
+            reader = csv.DictReader(chairsfh, fieldnames=["Session", "Name", "Email"])
+            for row in reader:
+                session_id = row['Session'].split(':')[0]
+                assert session_id not in chairs_dict
+                chairs_dict[session_id] = (row['Name'], row['Email'])
 
     # read in the CSV file mapping paper/poster titles to anthology IDs
     anthology_dict = {}
@@ -185,9 +189,9 @@ def main():
                 for paper in session:
                     app_paper_id = next(app_id_counter)
                     best_paper_id, best_paper_start, best_paper_end, best_paper_title = BEST_PAPER_REGEXP.match(paper.strip()).groups()
-                    best_paper_url = get_anthology_link(anthology_dict[best_paper_title.lower()])
+                    best_paper_url = get_anthology_link(anthology_dict, best_paper_title.lower(), for_app=True)
                     best_paper_abstract = abstract_dict[best_paper_id]
-                    paper_csv_writer.writerow([app_session_id, app_paper_id, best_paper_title, day_datetime.strftime('%D'), best_paper_start, best_paper_end, session_location, 'Main Papers & Posters', best_paper_abstract + " [<a href='{}'>PDF</a>]".format(best_paper_url)])
+                    paper_csv_writer.writerow([app_session_id, app_paper_id, best_paper_title, day_datetime.strftime('%D'), best_paper_start, best_paper_end, session_location, 'Main Papers & Posters', best_paper_abstract + "{}".format(best_paper_url)])
                     best_paper_authors = authors_dict[best_paper_id].strip()
                     best_paper_authors_list = best_paper_authors.replace(" and ", ", ").split(", ")
                     for best_paper_author in best_paper_authors_list:
@@ -219,8 +223,8 @@ def main():
                         session_title = '{} ({})'.format(session_title, session_type) if session_type else session_title
                         session_csv_writer.writerow([app_session_id, session_title.replace('&amp;', '&'), day_datetime.strftime('%D'), session_group_start, session_group_end, session_location, 'Conference Sessions', ''])
                     else:
-                        session_chair_name, session_chair_email = chairs_dict[session_id]
-                        session_csv_writer.writerow([app_session_id, session_title.replace('&amp;', '&'), day_datetime.strftime('%D'), session_group_start, session_group_end, session_location, 'Conference Sessions', 'Session Chair: {}'.format(session_chair_name)])
+                        session_chair_link = get_session_chair_link(chairs_dict, session_id, for_app=True)
+                        session_csv_writer.writerow([app_session_id, session_title.replace('&amp;', '&'), day_datetime.strftime('%D'), session_group_start, session_group_end, session_location, 'Conference Sessions', 'Session Chair: {}'.format(session_chair_link)])
                     for paper in split:
                         paper = paper.strip()
                         if 'poster' in session_type.lower() or 'poster' in session_title.lower():
@@ -232,13 +236,13 @@ def main():
                                 app_paper_id = next(app_id_counter)
                                 if poster_id.endswith('-demo'):
                                     paper_title = '[DEMO] {}'.format(poster_title)
-                                    poster_url = get_anthology_link(anthology_dict[poster_title.lower()])
+                                    poster_url = get_anthology_link(anthology_dict, poster_title.lower(), for_app=True)
                                 elif poster_id.endswith('-TACL'):
                                     poster_title = '[TACL] {}'.format(poster_title)
                                     poster_url = ''
                                 else:
-                                    poster_url = get_anthology_link(anthology_dict[poster_title.lower()])
-                                paper_csv_writer.writerow([app_session_id, app_paper_id, poster_title, day_datetime.strftime('%D'), session_group_start, session_group_end, session_location, 'Main Papers & Posters', poster_abstract + " [<a href='{}'>PDF</a>]".format(poster_url)])
+                                    poster_url = get_anthology_link(anthology_dict, poster_title.lower(), for_app=True)
+                                paper_csv_writer.writerow([app_session_id, app_paper_id, poster_title, day_datetime.strftime('%D'), session_group_start, session_group_end, session_location, 'Main Papers & Posters', poster_abstract + "{}".format(poster_url)])
                                 poster_authors = authors_dict[poster_id].strip()
                                 poster_authors_list = poster_authors.replace(" and ", ", ").split(', ')
                                 for poster_author in poster_authors_list:
@@ -257,8 +261,8 @@ def main():
                                 paper_title = '[TACL] {}'.format(paper_title)
                                 paper_url = ''
                             else:
-                                paper_url = get_anthology_link(anthology_dict[paper_title.lower()])
-                            paper_csv_writer.writerow([app_session_id, app_paper_id, paper_title, day_datetime.strftime('%D'), paper_start, paper_end, session_location, 'Main Papers & Posters', paper_abstract + " [<a href='{}'>PDF</a>]".format(paper_url)])
+                                paper_url = get_anthology_link(anthology_dict, paper_title.lower(), for_app=True)
+                            paper_csv_writer.writerow([app_session_id, app_paper_id, paper_title, day_datetime.strftime('%D'), paper_start, paper_end, session_location, 'Main Papers & Posters', paper_abstract + "{}".format(paper_url)])
                             paper_authors = authors_dict[paper_id].strip()
                             paper_authors_list = paper_authors.replace(" and ", ", ").split(', ')
                             for paper_author in paper_authors_list:
