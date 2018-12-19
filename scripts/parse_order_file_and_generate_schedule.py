@@ -80,20 +80,26 @@ def collect_instances(iterator, character):
     return groups
 
 
-def get_session_chair_link(chairs_dict, session_id):
+def get_session_chair_link(chairs_dict, session_id, for_app=False):
     if chairs_dict:
         session_chair_name, session_chair_email = chairs_dict[session_id]
-        ans = '<a href="mailto:{}">{}</a>'.format(session_chair_name, session_chair_email)
+        if for_app:
+            ans = session_chair_name
+        else:
+            ans = '<a href="mailto:{}">{}</a>'.format(session_chair_name, session_chair_email)
     else:
         ans = 'TBD'
     return ans
 
 
-def get_anthology_link(anthology_dict, paper_title):
+def get_anthology_link(anthology_dict, paper_title, for_app=False):
     if anthology_dict:
         anthology_id = anthology_dict[paper_title.lower()]
-        anthology_url = "http://aclweb.org/anthology/{}".format(anthology_id)
-        ans = '&nbsp;&nbsp;<i class="fa fa-file-pdf-o paper-icon" data="{}" aria-hidden="true"></i>'.format(anthology_url)
+        anthology_url = "<http://aclweb.org/anthology/{}".format(anthology_id)
+        if for_app:
+            ans = ' [<a href="{}">PDF</>]'.format(anthology_url)
+        else:
+            ans = '&nbsp;&nbsp;<i class="fa fa-file-pdf-o paper-icon" data="{}" aria-hidden="true"></i>'.format(anthology_url)
     else:
         ans = ''
     return ans
@@ -145,7 +151,7 @@ def main():
             authors_dict[row['Submission ID']] = row['Authors']
 
     # read in the CSV file mapping sessions to chairs
-    chairs_dict = {} 
+    chairs_dict = {}
     if args.chairs_csv:
         with open(args.chairs_csv, 'r') as chairsfh:
             reader = csv.DictReader(chairsfh, fieldnames=["Session", "Name", "Email"])
