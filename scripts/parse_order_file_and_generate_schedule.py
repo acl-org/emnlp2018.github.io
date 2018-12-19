@@ -6,8 +6,8 @@ then be added to the program page on the website:
 
 - order.txt
 - authors.csv
-- session-chairs.csv
-- anthology-mapping.csv
+- session-chairs.csv [optional]
+- anthology-mapping.csv [optional]
 
 Note that:
 
@@ -20,6 +20,11 @@ Note that:
 4. The first three files were provided by the program chairs.
 
 5. The last file was scraped manually from the anthology webpage. Although this should not be necessary as the anthology links are generated based on the `order.txt` file, in this case, changes were made to the order file AFTER the handbook was published and, therefore, the anthology was out of sync.
+
+6. If the session chairs file is not provided, the schedule and the app will contain "TBD" for all sessions as the chair.
+
+7. If the anthology mapping file is not provided, the PDF icons in the schedule linked to the anthology URL will not be generated.
+
 '''
 
 import argparse
@@ -75,8 +80,23 @@ def collect_instances(iterator, character):
     return groups
 
 
-def get_anthology_link(anthology_id):
-    return "http://aclweb.org/anthology/{}".format(anthology_id)
+def get_session_chair_link(chairs_dict, session_id):
+    if chairs_dict:
+        session_chair_name, session_chair_email = chairs_dict[session_id]
+        ans = '<a href="mailto:{}">{}</a>'.format(session_chair_name, session_chair_email)
+    else:
+        ans = 'TBD'
+    return ans
+
+
+def get_anthology_link(anthology_dict, paper_title):
+    if anthology_dict:
+        anthology_id = anthology_dict[paper_title.lower()]
+        anthology_url = "http://aclweb.org/anthology/{}".format(anthology_id)
+        ans = '&nbsp;&nbsp;<i class="fa fa-file-pdf-o paper-icon" data="{}" aria-hidden="true"></i>'.format(anthology_url)
+    else:
+        ans = ''
+    return ans
 
 
 def main():
@@ -93,12 +113,14 @@ def main():
                         help="Path to CSV file containing author information")
     parser.add_argument("--chairs",
                         dest="chairs_csv",
-                        required=True,
-                        help="Path to CSV file containing session chair information")
+                        required=False,
+                        default=None,
+                        help="Path to optional CSV file containing session chair information")
     parser.add_argument("--anthology",
                         dest="anthology_csv",
-                        required=True,
-                        help="Path to CSV file containing anthology IDs for papers, posters, and demos")
+                        required=False,
+                        default=None,
+                        help="Path to optional CSV file containing anthology IDs for papers, posters, and demos")
 
     # parse given command line arguments
     args = parser.parse_args()
@@ -123,20 +145,22 @@ def main():
             authors_dict[row['Submission ID']] = row['Authors']
 
     # read in the CSV file mapping sessions to chairs
-    chairs_dict = {}
-    with open(args.chairs_csv, 'r') as chairsfh:
-        reader = csv.DictReader(chairsfh, fieldnames=["Session", "Name", "Email"])
-        for row in reader:
-            session_id = row['Session'].split(':')[0]
-            assert session_id not in chairs_dict
-            chairs_dict[session_id] = (row['Name'], row['Email'])
+    chairs_dict = {} 
+    if args.chairs_csv:
+        with open(args.chairs_csv, 'r') as chairsfh:
+            reader = csv.DictReader(chairsfh, fieldnames=["Session", "Name", "Email"])
+            for row in reader:
+                session_id = row['Session'].split(':')[0]
+                assert session_id not in chairs_dict
+                chairs_dict[session_id] = (row['Name'], row['Email'])
 
     # read in the CSV file mapping paper/poster titles to anthology IDs
     anthology_dict = {}
-    with open(args.anthology_csv, 'r') as anthologyfh:
-        reader = csv.DictReader(anthologyfh, fieldnames=["Title", "ID"])
-        for row in reader:
-            anthology_dict[row['Title'].lower()] = row['ID']
+    if args.anthology_csv:
+        with open(args.anthology_csv, 'r') as anthologyfh:
+            reader = csv.DictReader(anthologyfh, fieldnames=["Title", "ID"])
+            for row in reader:
+                anthology_dict[row['Title'].lower()] = row['ID']
 
     # now in each day, process each session one by one
     days_counter = count(start=3)
@@ -203,8 +227,8 @@ def main():
                 for paper in session:
                     best_paper_id, best_paper_start, best_paper_end, best_paper_title = BEST_PAPER_REGEXP.match(paper.strip()).groups()
                     best_paper_authors = authors_dict[best_paper_id].strip()
-                    best_paper_url = get_anthology_link(anthology_dict[best_paper_title.lower()])
-                    generated_html.append('<tr id="best-paper" paper-id="{}"><td id="paper-time">{}&ndash;{}</td><td><span class="paper-title">{}. </span><em>{}</em>&nbsp;&nbsp;<i class="fa fa-file-pdf-o paper-icon" data="{}" aria-hidden="true"></i></td></tr>'.format(best_paper_id, best_paper_start, best_paper_end, best_paper_title, best_paper_authors, best_paper_url))
+                    best_paper_url = get_anthology_link(anthology_dict, best_paper_title.lower())
+                    generated_html.append('<tr id="best-paper" paper-id="{}"><td id="paper-time">{}&ndash;{}</td><td><span class="paper-title">{}. </span><em>{}</em>{}</td></tr>'.format(best_paper_id, best_paper_start, best_paper_end, best_paper_title, best_paper_authors, best_paper_url))
                 generated_html.append('</table></div></div>')
             elif 'orals' in session_string.lower():
                 session_group_start, session_group_end, session_group_type, session_group_description, session_group_roman_numeral = PAPER_SESSION_GROUP_REGEXP.match(session_string).groups()
@@ -228,8 +252,8 @@ def main():
                         session_title = '{} ({})'.format(session_title, session_type) if session_type else session_title
                         generated_html.append('<div class="session session-expandable session-posters" id="session-poster-{}"><div id="expander"></div><a href="#" class="session-title">{}: {} </a><br/><span class="session-time" title="{}">{} &ndash; {}</span><br/><span class="session-location btn btn--info btn--location">{}</span><div class="poster-session-details"><br/><table class="poster-table">'.format(next(poster_session_counter), session_id, session_title, day_string, session_group_start, session_group_end, session_location))
                     else:
-                        session_chair_name, session_chair_email = chairs_dict[session_id]
-                        generated_html.append('<div class="session session-expandable session-papers{}" id="session-{}"><div id="expander"></div><a href="#" class="session-title">{}: {}</a><br/><span class="session-time" title="{}">{} &ndash; {}</span><br/><span class="session-location btn btn--info btn--location">{}</span><br/><div class="paper-session-details"><br/><a href="#" class="session-selector" id="session-{}-selector"> Choose All</a><a href="#" class="session-deselector" id="session-{}-deselector">Remove All</a><table class="paper-table"><tr><td class="session-chair" colspan="2">Chair: <a href="mailto:{}">{}</a></td></tr>'.format(next(paper_session_counter), session_id.lower(), session_id, session_title, day_string, session_group_start, session_group_end, session_location, session_id.lower(), session_id.lower(), session_chair_email, session_chair_name))
+                        session_chair_link = get_session_chair_link(chairs_dict, session_id)
+                        generated_html.append('<div class="session session-expandable session-papers{}" id="session-{}"><div id="expander"></div><a href="#" class="session-title">{}: {}</a><br/><span class="session-time" title="{}">{} &ndash; {}</span><br/><span class="session-location btn btn--info btn--location">{}</span><br/><div class="paper-session-details"><br/><a href="#" class="session-selector" id="session-{}-selector"> Choose All</a><a href="#" class="session-deselector" id="session-{}-deselector">Remove All</a><table class="paper-table"><tr><td class="session-chair" colspan="2">Chair: {}</td></tr>'.format(next(paper_session_counter), session_id.lower(), session_id, session_title, day_string, session_group_start, session_group_end, session_location, session_id.lower(), session_id.lower(), session_chair_link))
                     for paper in split:
                         paper = paper.strip()
                         if 'poster' in session_type.lower() or 'poster' in session_title.lower():
@@ -245,9 +269,9 @@ def main():
                                     # poster_url = 'https://transacl.org/ojs/index.php/tacl/article/view/{}'.format(tacl_article_id)
                                     poster_url = ''
                                 else:
-                                    poster_url = get_anthology_link(anthology_dict[poster_title.lower()])
+                                    poster_url = get_anthology_link(anthology_dict, poster_title.lower())
                                 poster_authors = authors_dict[poster_id].strip()
-                                generated_html.append('<tr id="poster" poster-id="{}"><td><span class="poster-title">{}. </span><em>{}</em>&nbsp;&nbsp;<i class="fa fa-file-pdf-o paper-icon" data="{}" aria-hidden="true"></i></td></tr>'.format(poster_id, poster_title, poster_authors, poster_url))
+                                generated_html.append('<tr id="poster" poster-id="{}"><td><span class="poster-title">{}. </span><em>{}</em>{}</td></tr>'.format(poster_id, poster_title, poster_authors, poster_url))
                         else:
                             paper_id, paper_start, paper_end, paper_title = PAPER_REGEXP.match(paper.strip()).groups()
                             paper_authors = authors_dict[paper_id].strip()
@@ -257,8 +281,8 @@ def main():
                                 # paper_url = 'https://transacl.org/ojs/index.php/tacl/article/view/{}'.format(tacl_article_id)
                                 paper_url = ''
                             else:
-                                paper_url = get_anthology_link(anthology_dict[paper_title.lower()])
-                            generated_html.append('<tr id="paper" paper-id="{}"><td id="paper-time">{}&ndash;{}</td><td><span class="paper-title">{}. </span><em>{}</em>&nbsp;&nbsp;<i class="fa fa-file-pdf-o paper-icon" data="{}" aria-hidden="true"></i></td></tr>'.format(paper_id, paper_start, paper_end, paper_title, paper_authors, paper_url))
+                                paper_url = get_anthology_link(anthology_dict, paper_title.lower())
+                            generated_html.append('<tr id="paper" paper-id="{}"><td id="paper-time">{}&ndash;{}</td><td><span class="paper-title">{}. </span><em>{}</em>{}</td></tr>'.format(paper_id, paper_start, paper_end, paper_title, paper_authors, paper_url))
                     generated_html.append('</table></div></div>'.format(paper_id, paper_start, paper_end, paper_title))
                 generated_html.append('</div>')
 
