@@ -32,7 +32,8 @@ from parse_order_file_and_generate_schedule import (NON_PAPER_SESSION_REGEXP,
                                                     process_line,
                                                     collect_instances,
                                                     get_anthology_link,
-                                                    get_session_chair_link)
+                                                    get_session_chair_link,
+                                                    get_tacl_link)
 
 
 def main():
@@ -240,7 +241,7 @@ def main():
                                     poster_url = get_anthology_link(anthology_dict, poster_title.lower(), for_app=True)
                                 elif poster_id.endswith('-TACL'):
                                     poster_title = '[TACL] {}'.format(poster_title)
-                                    poster_url = ''
+                                    poster_url = get_tacl_link(anthology_dict, poster_title.lower(), for_app=True)
                                 else:
                                     poster_url = get_anthology_link(anthology_dict, poster_title.lower(), for_app=True)
                                 paper_csv_writer.writerow([app_session_id, app_paper_id, poster_title, day_datetime.strftime('%D'), session_group_start, session_group_end, session_location, 'Main Papers & Posters', poster_abstract + "{}".format(poster_url)])
@@ -260,7 +261,7 @@ def main():
                             app_paper_id = next(app_id_counter)
                             if paper_id.endswith('-TACL'):
                                 paper_title = '[TACL] {}'.format(paper_title)
-                                paper_url = ''
+                                paper_url = get_tacl_link(anthology_dict, paper_title.lower(), for_app=True)
                             else:
                                 paper_url = get_anthology_link(anthology_dict, paper_title.lower(), for_app=True)
                             paper_csv_writer.writerow([app_session_id, app_paper_id, paper_title, day_datetime.strftime('%D'), paper_start, paper_end, session_location, 'Main Papers & Posters', paper_abstract + "{}".format(paper_url)])

@@ -105,6 +105,23 @@ def get_anthology_link(anthology_dict, paper_title, for_app=False):
     return ans
 
 
+def get_tacl_link(anthology_dict, paper_title, for_app=False):
+    if anthology_dict:
+        # we don't have the PDFs for all the TACL papers
+        try:
+            anthology_id = anthology_dict[paper_title.lower()]
+        except KeyError:
+            ans = ''
+        else:
+            if for_app:
+                ans = ' [<a href="https://emnlp2018.org/downloads/tacl-papers/{}.pdf">PDF</>]'.format(anthology_id)
+            else:
+                ans = '&nbsp;&nbsp;<i class="fa fa-file-pdf-o paper-icon" data="/downloads/tacl-papers/{}.pdf" aria-hidden="true"></i>'.format(anthology_id)
+    else:
+        ans = ''
+    return ans
+
+
 def main():
 
     # set up an argument parser
@@ -271,9 +288,7 @@ def main():
                                 poster_id, poster_title = POSTER_DEMO_REGEXP.match(paper).groups()
                                 if poster_id.endswith('-TACL'):
                                     poster_title = '[TACL] {}'.format(poster_title)
-                                    # tacl_article_id = poster_id.split('-')[0]
-                                    # poster_url = 'https://transacl.org/ojs/index.php/tacl/article/view/{}'.format(tacl_article_id)
-                                    poster_url = ''
+                                    poster_url = get_tacl_link(anthology_dict, poster_title.lower())
                                 else:
                                     poster_url = get_anthology_link(anthology_dict, poster_title.lower())
                                 poster_authors = authors_dict[poster_id].strip()
@@ -283,9 +298,7 @@ def main():
                             paper_authors = authors_dict[paper_id].strip()
                             if paper_id.endswith('-TACL'):
                                 paper_title = '[TACL] {}'.format(paper_title)
-                                # tacl_article_id = paper_id.split('-')[0]
-                                # paper_url = 'https://transacl.org/ojs/index.php/tacl/article/view/{}'.format(tacl_article_id)
-                                paper_url = ''
+                                paper_url = get_tacl_link(anthology_dict, paper_title.lower())
                             else:
                                 paper_url = get_anthology_link(anthology_dict, paper_title.lower())
                             generated_html.append('<tr id="paper" paper-id="{}"><td id="paper-time">{}&ndash;{}</td><td><span class="paper-title">{}. </span><em>{}</em>{}</td></tr>'.format(paper_id, paper_start, paper_end, paper_title, paper_authors, paper_url))
