@@ -93,10 +93,11 @@ def main():
 
     # read in the CSV file mapping paper/poster titles to anthology IDs
     anthology_dict = {}
-    with open(args.anthology_csv, 'r') as anthologyfh:
-        reader = csv.DictReader(anthologyfh, fieldnames=["Title", "ID"])
-        for row in reader:
-            anthology_dict[row['Title'].lower()] = row['ID']
+    if args.anthology_csv:
+        with open(args.anthology_csv, 'r') as anthologyfh:
+            reader = csv.DictReader(anthologyfh, fieldnames=["Title", "ID"])
+            for row in reader:
+                anthology_dict[row['Title'].lower()] = row['ID']
 
     # read in the CSV file mapping paper IDs to abstracts
     abstract_dict = {}

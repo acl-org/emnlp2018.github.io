@@ -86,7 +86,7 @@ def get_session_chair_link(chairs_dict, session_id, for_app=False):
         if for_app:
             ans = session_chair_name
         else:
-            ans = '<a href="mailto:{}">{}</a>'.format(session_chair_name, session_chair_email)
+            ans = '<a href="mailto:{}">{}</a>'.format(session_chair_email, session_chair_name)
     else:
         ans = 'TBD'
     return ans
@@ -95,7 +95,7 @@ def get_session_chair_link(chairs_dict, session_id, for_app=False):
 def get_anthology_link(anthology_dict, paper_title, for_app=False):
     if anthology_dict:
         anthology_id = anthology_dict[paper_title.lower()]
-        anthology_url = "<http://aclweb.org/anthology/{}".format(anthology_id)
+        anthology_url = "http://aclweb.org/anthology/{}".format(anthology_id)
         if for_app:
             ans = ' [<a href="{}">PDF</>]'.format(anthology_url)
         else:
