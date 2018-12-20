@@ -3058,8 +3058,7 @@ script: |
                     <tr id="poster" poster-id="1346-TACL">
                         <td>
                             <span class="poster-title">[TACL] Linear Algebraic Structure of Word Senses, with Applications to Polysemy.</span>
-                            <em>Sanjeev Arora, Yuanzhi Li, Yingyu Liang, Tengyu Ma, Andrej Risteski</em>&nbsp;&nbsp;
-                            <i class="fa fa-file-pdf-o paper-icon" data="" aria-hidden="true"></i>
+                            <em>Sanjeev Arora, Yuanzhi Li, Yingyu Liang, Tengyu Ma, Andrej Risteski</em>
                         </td>
                     </tr>
                     <tr>
@@ -4208,8 +4207,7 @@ script: |
                     <tr id="poster" poster-id="1199-TACL">
                         <td>
                             <span class="poster-title">[TACL] In-Order Transition-based Constituent Parsing.</span>
-                            <em>Jiangming Liu and Yue Zhang</em>&nbsp;&nbsp;
-                            <i class="fa fa-file-pdf-o paper-icon" data="" aria-hidden="true"></i>
+                            <em>Jiangming Liu and Yue Zhang</em>
                         </td>
                     </tr>
                     <tr id="poster" poster-id="1425-TACL">
@@ -5620,7 +5618,7 @@ script: |
                     <tr id="poster" poster-id="1424-TACL">
                         <td>
                             <span class="poster-title">[TACL] Polite Dialogue Generation Without Parallel Data.</span>
-                            <em>Niu, Tong  and Bansal, Mohit</em>&nbsp;&nbsp;
+                            <em>Tong Niu and Mohit Bansal</em>&nbsp;&nbsp;
                             <i class="fa fa-file-pdf-o paper-icon" data="/downloads/tacl-papers/EMNLP-TACL05.pdf" aria-hidden="true"></i>
                         </td>
                     </tr>
@@ -6403,15 +6401,13 @@ script: |
                     <tr id="poster" poster-id="1379-TACL">
                         <td>
                             <span class="poster-title">[TACL] Language Modeling for Morphologically Rich Languages: Character-Aware Modeling for Word-Level Prediction.</span>
-                            <em>Daniela Gerz, Ivan Vulić, Edoardo Maria Ponti, Jason Naradowsky, Roi Reichart, Anna Korhonen</em>&nbsp;&nbsp;
-                            <i class="fa fa-file-pdf-o paper-icon" data="" aria-hidden="true"></i>
+                            <em>Daniela Gerz, Ivan Vulić, Edoardo Maria Ponti, Jason Naradowsky, Roi Reichart, Anna Korhonen</em>
                         </td>
                     </tr>
                     <tr id="poster" poster-id="1396-TACL">
                         <td>
                             <span class="poster-title">[TACL] Low-Rank RNN Adaptation for Context-Aware Language Modeling.</span>
-                            <em>Aaron Jaech and Mari Ostendorf</em>&nbsp;&nbsp;
-                            <i class="fa fa-file-pdf-o paper-icon" data="" aria-hidden="true"></i>
+                            <em>Aaron Jaech and Mari Ostendorf</em>
                         </td>
                     </tr>
                     <tr>
