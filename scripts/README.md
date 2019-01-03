@@ -2,9 +2,11 @@
 
 1. Make sure you have the files `order.txt`, `authors.csv`, `session-chairs.csv` and `anthology-mapping.csv` under the `data` directory.
 
-2. Run `python parse_order_file_and_generate_schedule.py --order data/order.txt --authors data/authors.csv --chairs data/session-chairs.csv --anthology data/anthology-mapping.csv`. This will print out the HTML schedule to standard output. Take this output and replace the HTML in `schedule.md` in the appropriate place (which is the HTML that starts at the div block of Day 2 of the conference - November 2, 2018 and goes till right before the div block of the form containing the generate PDF button). Note also that the `anthology-mapping.csv` and `session-chairs.csv` are optional but if you skip them, session chair links and PDF icon-links will _not_ be included in the schedule HTML.
+2. Run `python parse_order_file_and_generate_schedule.py --order data/order.txt --authors data/authors.csv --chairs data/session-chairs.csv --anthology data/anthology-mapping.csv`. This will print out the HTML schedule to standard output. Take this output and replace the HTML in `schedule.md` in the appropriate place (which is the HTML that starts at the div block of Day 2 of the conference - November 2, 2018 and goes till right before the div block of the form containing the generate PDF button). 
 
-3. Manually link the TACL PDFs (under `downloads`) to the appropriate papers in the schedule.
+    Notes: 
+    - The `anthology-mapping.csv` and `session-chairs.csv` are optional but if you skip them, session chair links and PDF icon-links will _not_ be included in the schedule HTML. 
+    - Since TACL paper PDFs are not always in the anthology in time for the conference schedule, they are added manually to the `anthology-mapping.csv` file with the actual TACL PDFs added to the `downloads` folder. 
 
 ## To generate the sponsor thumbnails for the GuideBook app
 
@@ -26,7 +28,7 @@
     - `data/app/papers.csv`
     - `data/app/linking.csv`
 
-    Note that `sessions.csv`, `authors.csv` and `linking.csv` are already pre-populated (with tutorial and workshop info) and will be appended to rather than created from scratch. `papers.csv` only pertains to posters and presentations and will be created from scratch. Note also that the `anthology-mapping.csv` and `session-chairs.csv` are optional but if you skip them, session chair names and PDF links will _not_ be included in the app data.
+    Note that `sessions.csv`, `authors.csv` and `linking.csv` are already pre-populated (with tutorial and workshop info) and will be appended to rather than created from scratch. `papers.csv` only pertains to posters and presentations and will be created from scratch. Note also that the `anthology-mapping.csv` and `session-chairs.csv` are optional but if you skip them, session chair names and PDF links will _not_ be included in the app data. Also, just like earlier, TACL paper PDFs URLs in the app do not point to the anthology but rather to the conference website `downloads` folder.
 
 3. Make sure you have the following Guidebook template files in the `data/app` directory:
 
