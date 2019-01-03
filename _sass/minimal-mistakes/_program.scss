@@ -435,15 +435,23 @@ div.session {
         }
     }
 
+    tr#tutorial {
+        a i.video-icon {
+            cursor: pointer;
+            
+        }
+    }
+
+
     tr#best-paper {
-        i.paper-icon {
+        i.paper-icon, i.video-icon {
             cursor: pointer;
         }
     }
 
     div.session-abstract {
         p {
-            i.slides-icon {
+            i.slides-icon, i.video-icon {
                 cursor: pointer;
             }        
         }

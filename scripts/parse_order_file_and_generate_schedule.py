@@ -8,6 +8,7 @@ then be added to the program page on the website:
 - authors.csv
 - session-chairs.csv [optional]
 - anthology-mapping.csv [optional]
+- video-mapping.csv [optional]
 
 Note that:
 
@@ -24,6 +25,8 @@ Note that:
 6. If the session chairs file is not provided, the schedule and the app will contain "TBD" for all sessions as the chair.
 
 7. If the anthology mapping file is not provided, the PDF icons in the schedule linked to the anthology URL will not be generated.
+
+8. If the video mapping file is not provided, the video icons in the schedule linked to the video URL will not be generated.
 
 '''
 
@@ -47,6 +50,14 @@ KEYNOTE_ABSTRACT_DICT = {
     'Julia': 'Detecting deception from various forms of human behavior is a longstanding research goal which is of considerable interest to the military, law enforcement, corporate security, social services and mental health workers. However, both humans and polygraphs are very poor at this task. We describe more accurate methods we have developed to detect deception automatically from spoken language. Our classifiers are trained on the largest cleanly recorded corpus of within-subject deceptive and non-deceptive speech that has been collected. To distinguish truth from lie we make use of acoustic-prosodic, lexical, demographic, and personality features. We further examine differences in deceptive behavior based upon gender, personality, and native language (Mandarin Chinese vs. English), comparing our systems to human performance. We extend our studies to identify cues in trusted speech vs. mistrusted speech and how these features differ by speaker and by listener. Why does a listener believe a lie?',
     'Gideon': 'Since the dawn of human civilization, finance and language technology have been connected. However, only recently have advances in statistical language understanding, and an ever-increasing thirst for market advantage, led to the widespread application of natural language technology across the global capital markets. This talk will review the ways in which language technology is enabling market participants to quickly understand and respond to major world events and breaking business news. It will outline the state of the art in applications of NLP to finance and highlight open problems that are being addressed by emerging research.',
     'Johan': 'There are many recent advances in semantic parsing: we see a rising number of semantically annotated corpora and there is exciting technology (such as neural networks) to be explored. In this talk I will discuss what role computational semantics could play in future natural language processing applications (including fact checking and machine translation). I will argue that we should not just look at semantic parsing, but that things can get really interesting when we can use language-neutral meaning representations to draw (transparent) inferences. The main ideas will be exemplified by the parallel meaning bank, a new corpus comprising texts annotated with formal meaning representations for English, Dutch, German and Italian.'}
+
+KEYNOTE_SLIDE_DICT = {'Julia': 'https://drive.google.com/file/d/17Ke40bHHnUyNrdA4twcyKI17D_B22Oim/view?usp=sharing',
+                      'Gideon': 'https://drive.google.com/file/d/183r_3X3yzDhEWM43e2pOoS_w3kUxJbaR/view?usp=sharing',
+                      'Johan': 'https://drive.google.com/file/d/1xr8bnf1VnUZP9Ew1h8fjKCEs5InHhNps/view?usp=sharing'}
+
+KEYNOTE_VIDEO_DICT = {'Julia': 'https://vimeo.com/305200179',
+                      'Gideon': 'https://vimeo.com/305658007',
+                      'Johan': 'https://vimeo.com/306143088'}
 
 
 def process_line(line):
@@ -92,33 +103,43 @@ def get_session_chair_link(chairs_dict, session_id, for_app=False):
     return ans
 
 
+def get_video_link(video_dict, paper_title, for_app=False):
+    ans = ''
+    if video_dict:
+        video_url = video_dict[paper_title.lower()]
+        if video_url != 'NA':
+            if for_app:
+                ans = ' [<a href="{}">VIDEO</>]'.format(video_url)
+            else:
+                ans = '&nbsp;<i class="fa fa-file-video-o video-icon" data="{}" aria-hidden="true" title="Video"></i>'.format(video_url)
+    return ans
+
+
 def get_anthology_link(anthology_dict, paper_title, for_app=False):
+    ans = ''
     if anthology_dict:
         anthology_id = anthology_dict[paper_title.lower()]
         anthology_url = "http://aclweb.org/anthology/{}".format(anthology_id)
         if for_app:
             ans = ' [<a href="{}">PDF</>]'.format(anthology_url)
         else:
-            ans = '&nbsp;&nbsp;<i class="fa fa-file-pdf-o paper-icon" data="{}" aria-hidden="true"></i>'.format(anthology_url)
-    else:
-        ans = ''
+            ans = '&nbsp;&nbsp;<i class="fa fa-file-pdf-o paper-icon" data="{}" aria-hidden="true" title="PDF"></i>'.format(anthology_url)
     return ans
 
 
 def get_tacl_link(anthology_dict, paper_title, for_app=False):
+    ans = ''
     if anthology_dict:
         # we don't have the PDFs for all the TACL papers
         try:
             anthology_id = anthology_dict[paper_title.lower()]
         except KeyError:
-            ans = ''
+            pass
         else:
             if for_app:
                 ans = ' [<a href="https://emnlp2018.org/downloads/tacl-papers/{}.pdf">PDF</>]'.format(anthology_id)
             else:
-                ans = '&nbsp;&nbsp;<i class="fa fa-file-pdf-o paper-icon" data="/downloads/tacl-papers/{}.pdf" aria-hidden="true"></i>'.format(anthology_id)
-    else:
-        ans = ''
+                ans = '&nbsp;&nbsp;<i class="fa fa-file-pdf-o paper-icon" data="/downloads/tacl-papers/{}.pdf" aria-hidden="true" title="PDF"></i>'.format(anthology_id)
     return ans
 
 
@@ -144,6 +165,11 @@ def main():
                         required=False,
                         default=None,
                         help="Path to optional CSV file containing anthology IDs for papers, posters, and demos")
+    parser.add_argument("--videos",
+                        dest="video_csv",
+                        required=False,
+                        default=None,
+                        help="Path to optional CSV file containing video URLs for papers")
 
     # parse given command line arguments
     args = parser.parse_args()
@@ -185,6 +211,14 @@ def main():
             for row in reader:
                 anthology_dict[row['Title'].lower()] = row['ID']
 
+    # read in the CSV file mapping paper titles to video URLs
+    video_dict = {}
+    if args.video_csv:
+        with open(args.video_csv, 'r') as videofh:
+            reader = csv.DictReader(videofh, fieldnames=["Title", "URL"])
+            for row in reader:
+                video_dict[row['Title'].lower()] = row['URL']
+
     # now in each day, process each session one by one
     days_counter = count(start=3)
     lunch_id_counter = count(start=3)
@@ -222,19 +256,25 @@ def main():
                 if 'Julia' in session_title:
                     session_title = session_title.replace('Julia Hirschberg ', '')
                     session_abstract = KEYNOTE_ABSTRACT_DICT['Julia']
+                    session_slides_url = KEYNOTE_SLIDE_DICT['Julia']
+                    session_video_url = KEYNOTE_VIDEO_DICT['Julia']
                     session_people = 'Julia Hirschberg (Columbia University)'
                     session_people_link = 'http://www.cs.columbia.edu/~julia/'
                 elif 'Gideon' in session_title:
                     session_title = session_title.replace('Gideon Mann ', '')
                     session_abstract = KEYNOTE_ABSTRACT_DICT['Gideon']
+                    session_slides_url = KEYNOTE_SLIDE_DICT['Gideon']
+                    session_video_url = KEYNOTE_VIDEO_DICT['Gideon']
                     session_people = 'Gideon Mann (Bloomberg, L.P.)'
                     session_people_link = 'https://sites.google.com/site/gideonmann/'
                 elif 'Johan' in session_title:
                     session_title = session_title.replace('Johan Bos ', '')
                     session_abstract = KEYNOTE_ABSTRACT_DICT['Johan']
+                    session_slides_url = KEYNOTE_SLIDE_DICT['Johan']
+                    session_video_url = KEYNOTE_VIDEO_DICT['Johan']
                     session_people = 'Johan Bos (University of Groningen)'
                     session_people_link = 'https://www.rug.nl/staff/johan.bos/'
-                generated_html.append('<div class="session session-expandable session-plenary"><div id="expander"></div><a href="#" class="session-title"><strong>{}</strong></a><br/><span class="session-people"><a href="{}" target="_blank">{}</a></span><br/><span class="session-time" title="{}">{} &ndash; {}</span><br/><span class="session-location btn btn--info btn--location">{}</span><div class="paper-session-details"><br/><div class="session-abstract"><p>{}</p></div></div></div>'.format(session_title, session_people_link, session_people, day_string, session_start, session_end, session_location, session_abstract))
+                generated_html.append('<div class="session session-expandable session-plenary"><div id="expander"></div><a href="#" class="session-title"><strong>{}</strong></a><br/><span class="session-people"><a href="{}" target="_blank">{}</a></span><br/><span class="session-time" title="{}">{} &ndash; {}</span><br/><span class="session-location btn btn--info btn--location">{}</span><div class="paper-session-details"><br/><div class="session-abstract"><p>{}&nbsp;<i class="fa fa-television slides-icon" data="{}" aria-hidden="true" title="Slides"></i>&nbsp;<i class="fa fa-file-video-o video-icon" data="{}" aria-hidden="true" title="Video"></i></p></div></div></div>'.format(session_title, session_people_link, session_people, day_string, session_start, session_end, session_location, session_abstract, session_slides_url, session_video_url))
             elif 'opening' in session_string.lower():
                 session_start, session_end, session_title, session_location = NON_PAPER_SESSION_REGEXP.match(session_string).groups()
                 generated_html.append('<div class="session session-plenary" id="session-welcome"><span class="session-title">{}</span><br/><span class="session-time" title="{}">{} &ndash; {}</span><br/> <span class="session-location btn btn--info btn--location">{}</span></div>'.format(session_title, day_string, session_start, session_end, session_location))
@@ -251,7 +291,8 @@ def main():
                     best_paper_id, best_paper_start, best_paper_end, best_paper_title = BEST_PAPER_REGEXP.match(paper.strip()).groups()
                     best_paper_authors = authors_dict[best_paper_id].strip()
                     best_paper_url = get_anthology_link(anthology_dict, best_paper_title.lower())
-                    generated_html.append('<tr id="best-paper" paper-id="{}"><td id="paper-time">{}&ndash;{}</td><td><span class="paper-title">{}. </span><em>{}</em>{}</td></tr>'.format(best_paper_id, best_paper_start, best_paper_end, best_paper_title, best_paper_authors, best_paper_url))
+                    best_paper_video_url = get_video_link(video_dict, best_paper_title.lower())
+                    generated_html.append('<tr id="best-paper" paper-id="{}"><td id="paper-time">{}&ndash;{}</td><td><span class="paper-title">{}. </span><em>{}</em>{}{}</td></tr>'.format(best_paper_id, best_paper_start, best_paper_end, best_paper_title, best_paper_authors, best_paper_url, best_paper_video_url))
                 generated_html.append('</table></div></div>')
             elif 'orals' in session_string.lower():
                 session_group_start, session_group_end, session_group_type, session_group_description, session_group_roman_numeral = PAPER_SESSION_GROUP_REGEXP.match(session_string).groups()
@@ -299,9 +340,11 @@ def main():
                             if paper_id.endswith('-TACL'):
                                 paper_title = '[TACL] {}'.format(paper_title)
                                 paper_url = get_tacl_link(anthology_dict, paper_title.lower())
+                                paper_video_url = get_video_link(video_dict, paper_title.lower())
                             else:
                                 paper_url = get_anthology_link(anthology_dict, paper_title.lower())
-                            generated_html.append('<tr id="paper" paper-id="{}"><td id="paper-time">{}&ndash;{}</td><td><span class="paper-title">{}. </span><em>{}</em>{}</td></tr>'.format(paper_id, paper_start, paper_end, paper_title, paper_authors, paper_url))
+                                paper_video_url = get_video_link(video_dict, paper_title.lower())
+                            generated_html.append('<tr id="paper" paper-id="{}"><td id="paper-time">{}&ndash;{}</td><td><span class="paper-title">{}. </span><em>{}</em>{}{}</td></tr>'.format(paper_id, paper_start, paper_end, paper_title, paper_authors, paper_url, paper_video_url))
                     generated_html.append('</table></div></div>'.format(paper_id, paper_start, paper_end, paper_title))
                 generated_html.append('</div>')
 

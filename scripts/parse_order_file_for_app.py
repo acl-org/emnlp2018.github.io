@@ -9,6 +9,7 @@ and generates the various files needed to build the schedule in the conference a
 - abstracts.csv
 - session-chairs.csv [optional]
 - anthology-mapping.csv [optional]
+- video-mapping.csv [optional]
 
 Note that `dos2unix` must be run on the order file before processing.
 
@@ -29,11 +30,14 @@ from parse_order_file_and_generate_schedule import (NON_PAPER_SESSION_REGEXP,
                                                     POSTER_DEMO_REGEXP,
                                                     BEST_PAPER_REGEXP,
                                                     KEYNOTE_ABSTRACT_DICT,
+                                                    KEYNOTE_SLIDE_DICT,
+                                                    KEYNOTE_VIDEO_DICT,
                                                     process_line,
                                                     collect_instances,
                                                     get_anthology_link,
                                                     get_session_chair_link,
-                                                    get_tacl_link)
+                                                    get_tacl_link,
+                                                    get_video_link)
 
 
 def main():
@@ -62,6 +66,11 @@ def main():
                         required=False,
                         default=None,
                         help="Path to optional CSV file containing anthology IDs for papers, posters, and demos")
+    parser.add_argument("--videos",
+                        dest="video_csv",
+                        required=False,
+                        default=None,
+                        help="Path to optional CSV file containing video URLs for papers and keynotes")
 
     # parse given command line arguments
     args = parser.parse_args()
@@ -99,6 +108,14 @@ def main():
             reader = csv.DictReader(anthologyfh, fieldnames=["Title", "ID"])
             for row in reader:
                 anthology_dict[row['Title'].lower()] = row['ID']
+
+    # read in the CSV file mapping paper titles to video URLs
+    video_dict = {}
+    if args.video_csv:
+        with open(args.video_csv, 'r') as videofh:
+            reader = csv.DictReader(videofh, fieldnames=["Title", "URL"])
+            for row in reader:
+                video_dict[row['Title'].lower()] = row['URL']
 
     # read in the CSV file mapping paper IDs to abstracts
     abstract_dict = {}
@@ -161,19 +178,23 @@ def main():
                 session_start, session_end, session_title, session_location = NON_PAPER_SESSION_REGEXP.match(session_string).groups()
                 if 'Julia' in session_title:
                     session_title = session_title.replace('Julia Hirschberg ', '')
+                    session_slides_url = KEYNOTE_SLIDE_DICT['Julia']
+                    session_video_url = KEYNOTE_VIDEO_DICT['Julia']
                     session_abstract = KEYNOTE_ABSTRACT_DICT['Julia']
                     session_people = 'Julia Hirschberg (Columbia University)'
-                    session_people_link = 'http://www.cs.columbia.edu/~julia/'
                 elif 'Gideon' in session_title:
                     session_title = session_title.replace('Gideon Mann ', '')
+                    session_slides_url = KEYNOTE_SLIDE_DICT['Gideon']
+                    session_video_url = KEYNOTE_VIDEO_DICT['Gideon']
                     session_abstract = KEYNOTE_ABSTRACT_DICT['Gideon']
                     session_people = 'Gideon Mann (Bloomberg, L.P.)'
-                    session_people_link = 'https://sites.google.com/site/gideonmann/'
                 elif 'Johan' in session_title:
                     session_title = session_title.replace('Johan Bos ', '')
-                    session_abstract = KEYNOTE_ABSTRACT_DICT['Johan']
+                    session_slides_url = KEYNOTE_SLIDE_DICT['Johan']
+                    session_video_url = KEYNOTE_VIDEO_DICT['Johan']
+                    session_abstract = KEYNOTE_ABSTRACT_DICT['Johan'] + '{}{}'
                     session_people = 'Johan Bos (University of Groningen)'
-                    session_people_link = 'https://www.rug.nl/staff/johan.bos/'
+                session_abstract += ' [<a href="{}">Slides</a>] [<a href="{}">Video</a>]'.format(session_slides_url, session_video_url)
                 session_csv_writer.writerow([next(app_id_counter), '{} - {}'.format(session_title, session_people), day_datetime.strftime('%D'), session_start, session_end, session_location, 'Conference Sessions', session_abstract])
             elif 'opening' in session_string.lower():
                 session_start, session_end, session_title, session_location = NON_PAPER_SESSION_REGEXP.match(session_string).groups()
@@ -192,8 +213,9 @@ def main():
                     app_paper_id = next(app_id_counter)
                     best_paper_id, best_paper_start, best_paper_end, best_paper_title = BEST_PAPER_REGEXP.match(paper.strip()).groups()
                     best_paper_url = get_anthology_link(anthology_dict, best_paper_title.lower(), for_app=True)
+                    best_paper_video_url = get_video_link(video_dict, best_paper_title.lower(), for_app=True)
                     best_paper_abstract = abstract_dict[best_paper_id]
-                    paper_csv_writer.writerow([app_session_id, app_paper_id, best_paper_title, day_datetime.strftime('%D'), best_paper_start, best_paper_end, session_location, 'Main Papers & Posters', best_paper_abstract + "{}".format(best_paper_url)])
+                    paper_csv_writer.writerow([app_session_id, app_paper_id, best_paper_title, day_datetime.strftime('%D'), best_paper_start, best_paper_end, session_location, 'Main Papers & Posters', best_paper_abstract + "{}{}".format(best_paper_url, best_paper_video_url)])
                     best_paper_authors = authors_dict[best_paper_id].strip()
                     best_paper_authors_list = best_paper_authors.replace(" and ", ", ").split(", ")
                     for best_paper_author in best_paper_authors_list:
@@ -262,9 +284,11 @@ def main():
                             if paper_id.endswith('-TACL'):
                                 paper_title = '[TACL] {}'.format(paper_title)
                                 paper_url = get_tacl_link(anthology_dict, paper_title.lower(), for_app=True)
+                                paper_video_url = get_video_link(video_dict, paper_title.lower(), for_app=True)
                             else:
                                 paper_url = get_anthology_link(anthology_dict, paper_title.lower(), for_app=True)
-                            paper_csv_writer.writerow([app_session_id, app_paper_id, paper_title, day_datetime.strftime('%D'), paper_start, paper_end, session_location, 'Main Papers & Posters', paper_abstract + "{}".format(paper_url)])
+                                paper_video_url = get_video_link(video_dict, paper_title.lower(), for_app=True)
+                            paper_csv_writer.writerow([app_session_id, app_paper_id, paper_title, day_datetime.strftime('%D'), paper_start, paper_end, session_location, 'Main Papers & Posters', paper_abstract + "{}{}".format(paper_url, paper_video_url)])
                             paper_authors = authors_dict[paper_id].strip()
                             paper_authors_list = paper_authors.replace(" and ", ", ").split(', ')
                             for paper_author in paper_authors_list:

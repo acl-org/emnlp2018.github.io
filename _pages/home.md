@@ -17,14 +17,14 @@ excerpt: "October 31&ndash;November 4<br/>Brussels, Belgium"
 
 <h2>News</h2>
 
-**November 30, 2018**. The slides for all three keynotes are now available on the website on the [keynotes](/program/keynotes) page and are also linked to from the [schedule](/schedule).
+**January 3, 2019**. The videos for all keynotes and oral presentations are now linked to from the [schedule](/schedule). 
 {: .notice--info}
+
+**November 30, 2018**. The slides for all three keynotes are now available on the website on the [keynotes](/program/keynotes) page and are also linked to from the [schedule](/schedule).
+{: .notice}
 
 **November 2, 2018**. A PDF version of the conference handbook is also available [online](https://drive.google.com/file/d/1Ya0F3QaMqfACS7sHc9_bcnSfSjhWpumX/view). 
-{: .notice--info}
-
-**October 30, 2018**. Due to limited room space at the venue, attendees will need to spread themselves across FOUR rooms for all conference plenary sessions: **Gold Hall**, **Copper Hall**, **Silver Hall**, and **Hall 100**.
-{: .notice--info}
+{: .notice}
 
 **October 27, 2018**. The conference app is now live! If you already have the Guidebook app on your device, click on "Find Guides" and search for "EMNLP 2018" or scan the [QR code](/participants/#conference-app). Otherwise, click <a href="https://guidebook.com/g/emnlp2018/" target="_blank">here</a>.
 {: .notice}
