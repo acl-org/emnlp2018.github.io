@@ -6837,7 +6837,8 @@ script: |
                         <td>
                             <span class="paper-title">Greedy Search with Probabilistic N-gram Matching for Neural Machine Translation.</span>
                             <em>Chenze Shao, Xilin Chen and Yang Feng</em>&nbsp;&nbsp;
-                            <i class="fa fa-file-pdf-o paper-icon" data="http://aclweb.org/anthology/D18-1510" aria-hidden="true" title="PDF"></i>
+                            <i class="fa fa-file-pdf-o paper-icon" data="http://aclweb.org/anthology/D18-1510" aria-hidden="true" title="PDF"></i>&nbsp;
+                            <i class="fa fa-file-video-o video-icon" data="https://vimeo.com/306167593" aria-hidden="true" title="Video"></i>
                         </td>
                     </tr>
                     <tr id="paper" paper-id="464">
