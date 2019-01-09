@@ -17,7 +17,7 @@ excerpt: "October 31&ndash;November 4<br/>Brussels, Belgium"
 
 <h2>News</h2>
 
-**January 3, 2019**. The videos for all keynotes and oral presentations are now linked to from the [schedule](/schedule). 
+**January 9, 2019**. The videos for all keynotes and oral presentations are now linked to from the [schedule](/schedule). 
 {: .notice--info}
 
 **November 30, 2018**. The slides for all three keynotes are now available on the website on the [keynotes](/program/keynotes) page and are also linked to from the [schedule](/schedule).
