@@ -989,7 +989,7 @@ script: |
 
 <div id="introParagraph">
         <p>On this page, you can choose the sessions (and individual papers/posters) of your choice <em>and</em> generate a PDF of your customized schedule! This page should work on modern browsers on all operating systems. On mobile devices, Safari on iOS and Chrome on Android are the only browsers known to work. For the best experience, use a non-mobile device. For help, simply type "?"" while on the page or click on the "Help" button.</p>
-        <p><strong>Note</strong>: To accommodate the large number of attendees, some sessions will be livestreamed into multiple rooms. For sessions listed with multiple rooms, the first room will have the actual presentations &amp; the rest will show a live-streamed feed of the presentations. Recorded videos for talks are linked below in the schedule. To request the removal of your video, contact the <a href="mailto:emnlp2018-video-chair@googlegroups.com">video chair</a>.</p>
+        <p><strong>Note</strong>: To accommodate the large number of attendees, some sessions will be livestreamed into multiple rooms. For sessions listed with multiple rooms, the first room will have the actual presentations &amp; the rest will show a live-streamed feed of the presentations. Recorded videos for talks are linked below in the schedule. To request the removal of your video, contact the <a href="mailto:emnlp2018-video-chair@googlegroups.com">video chair</a>. Videos for the 3 tutorials on October 31st are unfortunately unavailable due to unforeseen issues with the videography.</p>
 </div>
 
 <p class="text-center">
