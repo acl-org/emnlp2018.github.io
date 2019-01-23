@@ -1213,7 +1213,7 @@ script: |
             <br/>
             <div class="session-abstract">
                 <p>Detecting deception from various forms of human behavior is a longstanding research goal which is of considerable interest to the military, law enforcement, corporate security, social services and mental health workers. However, both humans and polygraphs are very poor at this task. We describe more accurate methods we have developed to detect deception automatically from spoken language. Our classifiers are trained on the largest cleanly recorded corpus of within-subject deceptive and non-deceptive speech that has been collected. To distinguish truth from lie we make use of acoustic-prosodic, lexical, demographic, and personality features. We further examine differences in deceptive behavior based upon gender, personality, and native language (Mandarin Chinese vs. English), comparing our systems to human performance. We extend our studies to identify cues in trusted speech vs. mistrusted speech and how these features differ by speaker and by listener. Why does a listener believe a lie?&nbsp;
-                    <i class="fa fa-television slides-icon" data="https://drive.google.com/file/d/17Ke40bHHnUyNrdA4twcyKI17D_B22Oim/view?usp=sharing" aria-hidden="true" title="Slides"></i>&nbsp;
+                    <i class="fa fa-television slides-icon" data="/downloads/keynote-slides/JuliaHirschberg.pdf" aria-hidden="true" title="Slides"></i>&nbsp;
                     <i class="fa fa-file-video-o video-icon" data="https://vimeo.com/305200179" aria-hidden="true" title="Video"></i>
                 </p>
             </div>
@@ -4930,7 +4930,7 @@ script: |
             <br/>
             <div class="session-abstract">
                 <p>Since the dawn of human civilization, finance and language technology have been connected. However, only recently have advances in statistical language understanding, and an ever-increasing thirst for market advantage, led to the widespread application of natural language technology across the global capital markets. This talk will review the ways in which language technology is enabling market participants to quickly understand and respond to major world events and breaking business news. It will outline the state of the art in applications of NLP to finance and highlight open problems that are being addressed by emerging research.&nbsp;
-                    <i class="fa fa-television slides-icon" data="https://drive.google.com/file/d/183r_3X3yzDhEWM43e2pOoS_w3kUxJbaR/view?usp=sharing" aria-hidden="true" title="Slides"></i>&nbsp;
+                    <i class="fa fa-television slides-icon" data="/downloads/keynote-slides/GideonMann.pdf" aria-hidden="true" title="Slides"></i>&nbsp;
                     <i class="fa fa-file-video-o video-icon" data="https://vimeo.com/305658007" aria-hidden="true" title="Video"></i>
                 </p>
             </div>
@@ -7182,7 +7182,7 @@ script: |
             <br/>
             <div class="session-abstract">
                 <p>There are many recent advances in semantic parsing: we see a rising number of semantically annotated corpora and there is exciting technology (such as neural networks) to be explored. In this talk I will discuss what role computational semantics could play in future natural language processing applications (including fact checking and machine translation). I will argue that we should not just look at semantic parsing, but that things can get really interesting when we can use language-neutral meaning representations to draw (transparent) inferences. The main ideas will be exemplified by the parallel meaning bank, a new corpus comprising texts annotated with formal meaning representations for English, Dutch, German and Italian.&nbsp;
-                    <i class="fa fa-television slides-icon" data="https://drive.google.com/file/d/1xr8bnf1VnUZP9Ew1h8fjKCEs5InHhNps/view?usp=sharing" aria-hidden="true" title="Slides"></i>&nbsp;
+                    <i class="fa fa-television slides-icon" data="/downloads/keynote-slides/JohanBos.pdf" aria-hidden="true" title="Slides"></i>&nbsp;
                     <i class="fa fa-file-video-o video-icon" data="https://vimeo.com/306143088" aria-hidden="true" title="Video"></i>
                 </p>
             </div>
