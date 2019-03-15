@@ -1250,7 +1250,6 @@ script: |
                             <span class="paper-title">Privacy-preserving Neural Representations of Text.</span>
                             <em>Maximin Coavoux, Shashi Narayan and Shay B. Cohen</em>&nbsp;&nbsp;
                             <i class="fa fa-file-pdf-o paper-icon" data="http://aclweb.org/anthology/D18-1001" aria-hidden="true" title="PDF"></i>&nbsp;
-                            <i class="fa fa-file-video-o video-icon" data="https://vimeo.com/305202770" aria-hidden="true" title="Video"></i>
                         </td>
                     </tr>
                     <tr id="paper" paper-id="888">
