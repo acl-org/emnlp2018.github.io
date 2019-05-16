@@ -2,7 +2,7 @@
 title: Conference Schedule
 layout: schedule
 excerpt: "EMNLP 2018 conference schedule."
-permalink: /schedule
+permalink: /schedule/
 sidebar: false
 script: |
     <script type="text/javascript">
